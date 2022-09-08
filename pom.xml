@@ -186,6 +186,8 @@
 
       <!-- Special version for MR JAR jdk-misc artifact -->
       <version.jdk-misc>3.Final</version.jdk-misc>
+
+      <multi.release.jar>false</multi.release.jar>
     </properties>
 
     <build>
@@ -442,6 +444,7 @@
                   </addDefaultImplementationEntries>
                 </manifest>
                 <manifestEntries>
+                  <Multi-Release>${multi.release.jar}</Multi-Release>
                   <Implementation-URL>${project.url}</Implementation-URL>
                   <Java-Version>${java.version}</Java-Version>
                   <Java-Vendor>${java.vendor}</Java-Vendor>
@@ -1025,6 +1028,7 @@
             <properties>
                 <project.sources.location.java9>${project.basedir}/src/main/java9</project.sources.location.java9>
                 <srcjar.sources.location.java9>${project.build.directory}/sources-for-manifest-java9</srcjar.sources.location.java9>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1046,16 +1050,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1112,6 +1106,7 @@
             <properties>
                 <project.sources.location.java10>${project.basedir}/src/main/java10</project.sources.location.java10>
                 <srcjar.sources.location.java10>${project.build.directory}/sources-for-manifest-java10</srcjar.sources.location.java10>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1133,16 +1128,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1199,6 +1184,7 @@
             <properties>
                 <project.sources.location.java11>${project.basedir}/src/main/java11</project.sources.location.java11>
                 <srcjar.sources.location.java11>${project.build.directory}/sources-for-manifest-java11</srcjar.sources.location.java11>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1220,16 +1206,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1332,6 +1308,7 @@
             <properties>
                 <project.sources.location.java12>${project.basedir}/src/main/java12</project.sources.location.java12>
                 <srcjar.sources.location.java12>${project.build.directory}/sources-for-manifest-java12</srcjar.sources.location.java12>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1353,16 +1330,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1419,6 +1386,7 @@
             <properties>
                 <project.sources.location.java13>${project.basedir}/src/main/java13</project.sources.location.java13>
                 <srcjar.sources.location.java13>${project.build.directory}/sources-for-manifest-java13</srcjar.sources.location.java13>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1440,16 +1408,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1506,6 +1464,7 @@
             <properties>
                 <project.sources.location.java14>${project.basedir}/src/main/java14</project.sources.location.java14>
                 <srcjar.sources.location.java14>${project.build.directory}/sources-for-manifest-java14</srcjar.sources.location.java14>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1527,16 +1486,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1593,6 +1542,7 @@
             <properties>
                 <project.sources.location.java15>${project.basedir}/src/main/java15</project.sources.location.java15>
                 <srcjar.sources.location.java15>${project.build.directory}/sources-for-manifest-java15</srcjar.sources.location.java15>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1614,16 +1564,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1680,6 +1620,7 @@
             <properties>
                 <project.sources.location.java16>${project.basedir}/src/main/java16</project.sources.location.java16>
                 <srcjar.sources.location.java16>${project.build.directory}/sources-for-manifest-java16</srcjar.sources.location.java16>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1701,16 +1642,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1767,6 +1698,7 @@
             <properties>
                 <project.sources.location.java17>${project.basedir}/src/main/java17</project.sources.location.java17>
                 <srcjar.sources.location.java17>${project.build.directory}/sources-for-manifest-java17</srcjar.sources.location.java17>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1788,16 +1720,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -1918,6 +1840,7 @@
             <properties>
                 <project.sources.location.java18>${project.basedir}/src/main/java18</project.sources.location.java18>
                 <srcjar.sources.location.java18>${project.build.directory}/sources-for-manifest-java18</srcjar.sources.location.java18>
+                <multi.release.jar>true</multi.release.jar>
             </properties>
             <build>
                 <plugins>
@@ -1939,16 +1862,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Multi-Release>true</Multi-Release>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
