@@ -1016,7 +1016,85 @@
             </build>
         </profile>
 
-        <!-- This profile is activated when Java 9 or later is used to build -->
+        <!-- This profile is activated when Modular JDK is detected -->
+        <profile>
+            <id>multi-release-build</id>
+            <activation>
+                <jdk>[9,)</jdk>
+                <file>
+                    <exists>${basedir}/src/main/java${modular.java.version}</exists>
+                </file>
+            </activation>
+            <properties>
+                <project.sources.location>${project.basedir}/src/main/java${modular.java.version}</project.sources.location>
+                <srcjar.sources.location>${project.build.directory}/sources-for-manifest-java${modular.java.version}</srcjar.sources.location>
+                <multi.release.jar>true</multi.release.jar>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>multi-release-compile-java${modular.java.version}</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <release>${modular.java.version}</release>
+                                    <buildDirectory>${project.build.directory}</buildDirectory>
+                                    <compileSourceRoots>${project.sources.location}</compileSourceRoots>
+                                    <multiReleaseOutput>true</multiReleaseOutput>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-multirelease-sources-java${modular.java.version}</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${srcjar.sources.location}/META-INF/versions/${modular.java.version}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.sources.location}</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>include-multirelease-sources-java${modular.java.version}</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${srcjar.sources.location}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- This profile is activated when Java 9 is used to build -->
         <profile>
             <id>java9-mr-build</id>
             <activation>
@@ -1026,75 +1104,11 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java9>${project.basedir}/src/main/java9</project.sources.location.java9>
-                <srcjar.sources.location.java9>${project.build.directory}/sources-for-manifest-java9</srcjar.sources.location.java9>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>9</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java9</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>9</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java9}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java9</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java9}/META-INF/versions/9</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java9}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java9</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java9}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
-        <!-- This profile is activated when Java 10 or later is used to build -->
+        <!-- This profile is activated when Java 10 is used to build -->
         <profile>
             <id>java10-mr-build</id>
             <activation>
@@ -1104,75 +1118,11 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java10>${project.basedir}/src/main/java10</project.sources.location.java10>
-                <srcjar.sources.location.java10>${project.build.directory}/sources-for-manifest-java10</srcjar.sources.location.java10>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>10</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java10</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>10</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java10}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java10</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java10}/META-INF/versions/10</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java10}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java10</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java10}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
-        <!-- This profile is activated when Java 11 or later is used to build -->
+        <!-- This profile is activated when Java 11 is used to build -->
         <profile>
             <id>java11-mr-build</id>
             <activation>
@@ -1182,72 +1132,8 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java11>${project.basedir}/src/main/java11</project.sources.location.java11>
-                <srcjar.sources.location.java11>${project.build.directory}/sources-for-manifest-java11</srcjar.sources.location.java11>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>11</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java11</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>11</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java11}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java11</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java11}/META-INF/versions/11</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java11}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java11</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java11}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
         <!-- This profile is activated when Java 12 or later is used to test a project that supports Java 11 -->
@@ -1296,7 +1182,7 @@
             </build>
         </profile>
 
-        <!-- This profile is activated when Java 12 or later is used to build -->
+        <!-- This profile is activated when Java 12 is used to build -->
         <profile>
             <id>java12-mr-build</id>
             <activation>
@@ -1306,75 +1192,11 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java12>${project.basedir}/src/main/java12</project.sources.location.java12>
-                <srcjar.sources.location.java12>${project.build.directory}/sources-for-manifest-java12</srcjar.sources.location.java12>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>12</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java12</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>12</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java12}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java12</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java12}/META-INF/versions/12</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java12}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java12</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java12}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
-        <!-- This profile is activated when Java 13 or later is used to build -->
+        <!-- This profile is activated when Java 13 is used to build -->
         <profile>
             <id>java13-mr-build</id>
             <activation>
@@ -1384,75 +1206,11 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java13>${project.basedir}/src/main/java13</project.sources.location.java13>
-                <srcjar.sources.location.java13>${project.build.directory}/sources-for-manifest-java13</srcjar.sources.location.java13>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>13</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java13</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>13</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java13}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java13</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java13}/META-INF/versions/13</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java13}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java13</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java13}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
-        <!-- This profile is activated when Java 14 or later is used to build -->
+        <!-- This profile is activated when Java 14 is used to build -->
         <profile>
             <id>java14-mr-build</id>
             <activation>
@@ -1462,75 +1220,11 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java14>${project.basedir}/src/main/java14</project.sources.location.java14>
-                <srcjar.sources.location.java14>${project.build.directory}/sources-for-manifest-java14</srcjar.sources.location.java14>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>14</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java14</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>14</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java14}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java14</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java14}/META-INF/versions/14</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java14}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java14</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java14}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
-        <!-- This profile is activated when Java 15 or later is used to build -->
+        <!-- This profile is activated when Java 15 is used to build -->
         <profile>
             <id>java15-mr-build</id>
             <activation>
@@ -1540,75 +1234,11 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java15>${project.basedir}/src/main/java15</project.sources.location.java15>
-                <srcjar.sources.location.java15>${project.build.directory}/sources-for-manifest-java15</srcjar.sources.location.java15>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>15</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java15</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>15</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java15}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java15</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java15}/META-INF/versions/15</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java15}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java15</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java15}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
-        <!-- This profile is activated when Java 16 or later is used to build -->
+        <!-- This profile is activated when Java 16 is used to build -->
         <profile>
             <id>java16-mr-build</id>
             <activation>
@@ -1618,75 +1248,11 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java16>${project.basedir}/src/main/java16</project.sources.location.java16>
-                <srcjar.sources.location.java16>${project.build.directory}/sources-for-manifest-java16</srcjar.sources.location.java16>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>16</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java16</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>16</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java16}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java16</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java16}/META-INF/versions/16</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java16}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java16</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java16}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
-        <!-- This profile is activated when Java 17 or later is used to build -->
+        <!-- This profile is activated when Java 17 is used to build -->
         <profile>
             <id>java17-mr-build</id>
             <activation>
@@ -1696,72 +1262,8 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java17>${project.basedir}/src/main/java17</project.sources.location.java17>
-                <srcjar.sources.location.java17>${project.build.directory}/sources-for-manifest-java17</srcjar.sources.location.java17>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>17</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java17</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>17</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java17}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java17</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java17}/META-INF/versions/17</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java17}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java17</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java17}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
       <!-- This profile is activated when Java 18 or later is used to test a project that supports Java 17 -->
@@ -1828,7 +1330,7 @@
           </build>
       </profile>
 
-        <!-- This profile is activated when Java 18 or later is used to build -->
+        <!-- This profile is activated when Java 18 is used to build -->
         <profile>
             <id>java18-mr-build</id>
             <activation>
@@ -1838,72 +1340,8 @@
                 </file>
             </activation>
             <properties>
-                <project.sources.location.java18>${project.basedir}/src/main/java18</project.sources.location.java18>
-                <srcjar.sources.location.java18>${project.build.directory}/sources-for-manifest-java18</srcjar.sources.location.java18>
-                <multi.release.jar>true</multi.release.jar>
+                <modular.java.version>18</modular.java.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>compile-java18</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <release>18</release>
-                                    <buildDirectory>${project.build.directory}</buildDirectory>
-                                    <compileSourceRoots>${project.sources.location.java18}</compileSourceRoots>
-                                    <multiReleaseOutput>true</multiReleaseOutput>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                            <id>copy-multirelease-sources-java18</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                            <outputDirectory>${srcjar.sources.location.java18}/META-INF/versions/18</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.sources.location.java18}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>include-multirelease-sources-java18</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${srcjar.sources.location.java18}</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
     </profiles>
